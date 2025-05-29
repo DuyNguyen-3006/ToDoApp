@@ -1,6 +1,7 @@
 package main
 
 import (
+	"ToDoApp/Models"
 	"ToDoApp/controller"
 	"ToDoApp/initializers"
 	"github.com/gin-gonic/gin"
@@ -13,11 +14,13 @@ func init() {
 
 func main() {
 	r := gin.Default()
+	
+	initializers.DB.AutoMigrate(&Models.Post{})
 
-	r.POST("/api/v1/post", controller.PostsCreate)
+	r.POST("/api/v1/post", controller.PostsCreate(initializers.DB))
 	r.GET("/api/v1/post", controller.GetPosts)
 	r.GET("/api/v1/post/:id", controller.GetPostById)
-	r.PUT("/api/v1/post/:id", controller.UpdatePostById)
+	r.PUT("/api/v1/post/:id", controller.UpdatePostById(initializers.DB))
 	r.DELETE("/api/v1/post/:id", controller.DeletePostById)
 	r.Run()
 }
